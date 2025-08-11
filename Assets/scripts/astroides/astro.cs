@@ -54,7 +54,7 @@ public class astro : MonoBehaviour, IDamageable
     {
         if (Vector2.Distance(PlayerMovement.PlayerInstance.transform.position, transform.position) > DistanceToDespown)
         {
-            if (delete == null) delete = StartCoroutine(DeleteAfter(5f));
+            delete ??= StartCoroutine(DeleteAfter(5f));
         }
         else
         {
