@@ -5,7 +5,7 @@ public class PauseScreen : MonoBehaviour
 {
     [SerializeField] private GameObject PauseScreenObj;
     private new_inputSystem inputs;
-    private bool _paused = false;
+
     private void Awake()
     {
         inputs = new new_inputSystem();
@@ -23,14 +23,13 @@ public class PauseScreen : MonoBehaviour
 
     void Start()
     {
-        inputs.Player.Previous.performed += pause;
+        inputs.Player.Previous.performed += _ => Pause();
     }
 
-    private void pause(InputAction.CallbackContext context)
+    public void Pause()
     {
-        _paused = !_paused;
-        Time.timeScale = _paused ? 0 : 1;
-        PauseScreenObj.SetActive(_paused);
-        GameEventHandler.OnGamePuased?.Invoke();
+        PauseScreenObj.SetActive(!PauseScreenObj.activeSelf);
+        Time.timeScale = PauseScreenObj.activeSelf ? 0 : 1;
+        GameEventHandler.Instance.OnGamePaused?.Invoke();
     }
 }

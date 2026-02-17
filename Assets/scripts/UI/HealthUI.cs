@@ -8,17 +8,17 @@ public class HealthUI : MonoBehaviour
     private float _new_health;
     void Start()
     {
-        GameEventHandler.OnPlayerTakeDamage += newValue => StartCoroutine(UpdateSlider(newValue));
+        GameEventHandler.Instance.OnPlayerTakeDamage += newValue => StartCoroutine(UpdateSlider(newValue));
     }
 
     void OnDestroy()
     {
-        GameEventHandler.OnPlayerTakeDamage -= newValue => StartCoroutine(UpdateSlider(newValue));
+        GameEventHandler.Instance.OnPlayerTakeDamage -= newValue => StartCoroutine(UpdateSlider(newValue));
     }
 
     void OnDisable()
     {
-        GameEventHandler.OnPlayerTakeDamage -= newValue => StartCoroutine(UpdateSlider(newValue));
+        GameEventHandler.Instance.OnPlayerTakeDamage -= newValue => StartCoroutine(UpdateSlider(newValue));
     }
 
     private IEnumerator UpdateSlider(float newHealth)

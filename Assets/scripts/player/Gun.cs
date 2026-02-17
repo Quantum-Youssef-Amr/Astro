@@ -6,7 +6,7 @@ public class Gun : MonoBehaviour
 
     [SerializeField] private GameObject bullet;
     [SerializeField] private float GunPower, Rate;
-    [SerializeField] private AudioSource FireSound;
+    [SerializeField] private AudioClip FireSound;
     private new_inputSystem inputs;
     private Coroutine fire;
 
@@ -27,16 +27,15 @@ public class Gun : MonoBehaviour
 
     void Update()
     {
-        if (inputs.Player.Attack.IsInProgress())
+        if (inputs.Player.Attack.IsInProgress() || (SaveEngine.Instance.Data.settings.Platform == Platform.Android && inputs.Player.Heading.IsInProgress()))
         {
-            if (fire == null)
-                fire = StartCoroutine(Shoot());
+            fire ??= StartCoroutine(Shoot());
         }
     }
 
     private IEnumerator Shoot()
     {
-        FireSound.Play();
+        AudioManager.Instance.PlayerSfx(FireSound);
         GameObject bullet = Instantiate(this.bullet, transform.position, transform.parent.rotation);
         bullet.GetComponent<Rigidbody2D>().AddForce(transform.parent.rotation * Vector2.up * GunPower, ForceMode2D.Impulse);
         yield return new WaitForSeconds(1 / Rate);

@@ -1,25 +1,24 @@
 using UnityEngine;
-using System.Collections;
 
 public class PlayerHealth : MonoBehaviour, IDamageable
 {
     [SerializeField] private float Health;
-    [SerializeField] private AudioSource DamageAudio, DieAudio;
+    [SerializeField] private AudioClip DamageAudio, DieAudio;
 
     public void Damage(float damage)
     {
-        DamageAudio.Play();
+        AudioManager.Instance.PlayerSfx(DamageAudio);
         Health -= damage;
         if (Health <= 0)
         {
             Die();
         }
-        GameEventHandler.OnPlayerTakeDamage?.Invoke(Health);
+        GameEventHandler.Instance.OnPlayerTakeDamage?.Invoke(Health);
     }
 
     public void Die()
     {
-        GameEventHandler.OnGameOver?.Invoke();
-        DieAudio.Play();
+        GameEventHandler.Instance.OnGameOver?.Invoke();
+        AudioManager.Instance.PlayerSfx(DieAudio);
     }
 }

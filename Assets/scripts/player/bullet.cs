@@ -4,12 +4,13 @@ using System.Collections;
 public class bullet : MonoBehaviour
 {
     [SerializeField] private float Damage = 10f;
+
     void Start()
     {
-        StartCoroutine(DestoryAfter(3f));
+        StartCoroutine(DestroyAfter(3f));
     }
 
-    private IEnumerator DestoryAfter(float time)
+    private IEnumerator DestroyAfter(float time)
     {
         yield return new WaitForSeconds(time);
         Destroy(gameObject);

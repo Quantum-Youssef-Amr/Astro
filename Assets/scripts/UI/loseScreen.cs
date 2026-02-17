@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
@@ -9,22 +10,23 @@ public class loseScreen : MonoBehaviour
     [SerializeField] private float EaseSpeed = 5f;
     [SerializeField] private TextMeshProUGUI AfterLoseScoreUI;
     private int _score;
+
     void Start()
     {
-        GameEventHandler.OnGameOver += ShowGameOverScreen;
-        GameEventHandler.OnScoreChanged += CalcScore;
+        GameEventHandler.Instance.OnGameOver += ShowGameOverScreen;
+        GameEventHandler.Instance.OnScoreChanged += CalcScore;
     }
 
     void OnDisable()
     {
-        GameEventHandler.OnGameOver -= ShowGameOverScreen;
-        GameEventHandler.OnScoreChanged -= CalcScore;
+        GameEventHandler.Instance.OnGameOver -= ShowGameOverScreen;
+        GameEventHandler.Instance.OnScoreChanged -= CalcScore;
     }
 
     void OnDestroy()
     {
-        GameEventHandler.OnGameOver -= ShowGameOverScreen;
-        GameEventHandler.OnScoreChanged -= CalcScore;
+        GameEventHandler.Instance.OnGameOver -= ShowGameOverScreen;
+        GameEventHandler.Instance.OnScoreChanged -= CalcScore;
     }
 
     private void CalcScore(int newScore)
@@ -32,27 +34,15 @@ public class loseScreen : MonoBehaviour
         _score = newScore;
     }
 
-    private readonly string SaveKey = "Score";
     private void ShowGameOverScreen()
     {
-        int m_prev_score;
-        if (PlayerPrefs.HasKey(SaveKey))
-        {
-            m_prev_score = PlayerPrefs.GetInt(SaveKey);
-            if (_score > m_prev_score)
-            {
-                PlayerPrefs.SetInt(SaveKey, _score);
-                m_prev_score = _score;
-            }
-        }
-        else
-        {
-            PlayerPrefs.SetInt(SaveKey, _score);
-            m_prev_score = _score;
-        }
+        int m_prev_score = Math.Max(SaveEngine.Instance.Data.HighestScore, _score);
 
         StartCoroutine(ShowLoseScreen());
+
         AfterLoseScoreUI.text = $"Highest score: {m_prev_score}";
+
+        SaveEngine.Instance.Data.HighestScore = m_prev_score;
     }
 
     private IEnumerator ShowLoseScreen()
@@ -70,29 +60,17 @@ public class loseScreen : MonoBehaviour
             Time.timeScale = Mathf.Lerp(Time.timeScale, 0, EaseSpeed * Time.deltaTime);
             return Time.timeScale < 0.05f;
         });
-        Time.timeScale = 0;
     }
 
     public void GoMainMenu()
     {
-        goToScene("MainMenu");
+        Time.timeScale = 1;
+        GameSceneManager.Instance.TransitionWithReplaceScene("Game", "MainMenu", 2f, true);
     }
 
     public void Restart()
     {
-        goToScene("Game");
-    }
-
-    private void goToScene(string scene)
-    {
-        if (SceneManager.GetSceneByName(scene) == null)
-        {
-            print("no scene with this name");
-            return;
-        }
-
         Time.timeScale = 1;
-        GameEventHandler.CutConnections();
-        SceneManager.LoadScene(scene);
+        GameSceneManager.Instance.TransitionWithReplaceScene("Game", "Game", 2f, true);
     }
 }

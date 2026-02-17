@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class MainMenu : MonoBehaviour
 {
+
     void Start()
     {
         Application.targetFrameRate = 120;
@@ -9,7 +10,7 @@ public class MainMenu : MonoBehaviour
 
     public void OnPlay()
     {
-        GameEventHandler.OnEnterPlayScene?.Invoke();
+        GameSceneManager.Instance.TransitionWithReplaceScene("MainMenu", "Game", 2f, true);
     }
 
     public void OnQuit()
