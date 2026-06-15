@@ -106,10 +106,15 @@ The game supports PC (Windows, Mac, Linux) and Mobile (Android, iOS) platforms.
 - Unity 2021 LTS or newer
 - enjoy
 
-## Author
 
-Created by Quantum-Youssef-Amr
+---
 
-## License
+## ⚖️ License
 
-This project is provided as-is for educational use.
+**No license – All rights reserved.**
+
+This project is shared for **viewing and portfolio purposes only**.  
+You may not copy, modify, distribute, or use any part of this game or its assets without explicit written permission from the author.
+
+> 👤 **Author:** Youssef Amr – *The Solo Dev*
+
